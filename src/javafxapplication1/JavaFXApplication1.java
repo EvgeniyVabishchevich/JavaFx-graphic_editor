@@ -12,6 +12,16 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.application.Platform;
+import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -21,22 +31,28 @@ public class JavaFXApplication1 extends Application {
     
     @Override
     public void start(Stage primaryStage) {
-        Button btn = new Button();
-        btn.setText("Say 'Hello World'");
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-            
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println("Hello World!");
-            }
-        });
         
-        StackPane root = new StackPane();
-        root.getChildren().add(btn);
+        BorderPane root = new BorderPane();       
+        Scene scene = new Scene(root, 900, 500);
         
-        Scene scene = new Scene(root, 300, 250);
+        MenuBar menuBar = new MenuBar();
+        menuBar.prefWidthProperty().bind(primaryStage.widthProperty());
+        root.setTop(menuBar);
         
-        primaryStage.setTitle("Hello World!");
+        Menu fileMenu = new Menu("File");
+        MenuItem newMenuItem = new MenuItem("New");
+        MenuItem loadMenuItem = new MenuItem("Load");
+        MenuItem saveMenuItem = new MenuItem("Save");
+        MenuItem save_asMenuItem = new MenuItem("Save as");
+        MenuItem exitMenuItem = new MenuItem("Exit");
+        exitMenuItem.setOnAction(actionEvent -> Platform.exit());
+        
+        fileMenu.getItems().addAll(newMenuItem,loadMenuItem,
+                saveMenuItem,save_asMenuItem,exitMenuItem);
+        
+        menuBar.getMenus().addAll(fileMenu);
+        
+        primaryStage.setTitle("MyPaint");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
