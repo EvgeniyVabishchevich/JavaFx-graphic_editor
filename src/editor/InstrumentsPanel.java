@@ -4,6 +4,9 @@ import javafx.event.ActionEvent;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
 import java.lang.System;
+
+import javafx.scene.control.Separator;
+import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
@@ -36,6 +39,9 @@ public class InstrumentsPanel extends GridPane
         instruments = new ArrayList<>();
         instruments.add(new PencilInstrument());
         instruments.add(new FillInstrument());
+        instruments.add(new LineInstrument());
+        instruments.add(new RectInstrument());
+        instruments.add(new OvalInstrument());
 
         currentInstrumentIndex = 0;
 
@@ -51,9 +57,9 @@ public class InstrumentsPanel extends GridPane
             this.add(arrayOfInstrumentsButtons[i], 0, i);
             this.add(arrayOfInstrumentsButtons[i + arrayOfInstrumentsButtons.length/2], 1, i + arrayOfInstrumentsButtons.length/2 - 1);
         }
+
+
         this.add(but, 0, 1);
-
-
         arrayOfInstrumentsButtons[0].setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {

@@ -3,12 +3,12 @@ package editor;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.PixelReader;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.InputEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.image.WritableImage;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
