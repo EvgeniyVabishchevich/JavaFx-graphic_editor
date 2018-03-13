@@ -2,6 +2,7 @@ package editor;
 
 import javafx.scene.SnapshotParameters;
 import javafx.scene.input.InputEvent;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.PixelReader;
@@ -26,8 +27,14 @@ public class LineInstrument implements  Instrument {
      */
     private WritableImage startWritableImage;
 
+    /**
+     * Нажат ли шифт
+     */
+    private boolean shiftDown = false;
+
     @Override
     public <T extends InputEvent> void handleEvent(T event, EditorCanvas canvas) {
+
         if (event.getEventType() == MouseEvent.MOUSE_PRESSED)
         {
             mousePressed = true;
@@ -41,12 +48,19 @@ public class LineInstrument implements  Instrument {
         {
             canvas.getGraphicsContext2D().drawImage(startWritableImage, 0, 0);
             MouseEvent mouseEvent = (MouseEvent) event;
-            canvas.getGraphicsContext2D().strokeLine(startX, startY, mouseEvent.getX(), mouseEvent.getY());
+            if(shiftDown)
+            canvas.getGraphicsContext2D().strokeLine(startX, startY, mouseEvent.getX(), startY);
+            else canvas.getGraphicsContext2D().strokeLine(startX, startY, mouseEvent.getX(), mouseEvent.getY());
         }
 
         if (event.getEventType() == MouseEvent.MOUSE_RELEASED)
         {
             mousePressed = false;
+        }
+
+        if (event.getEventType() == KeyEvent.KEY_PRESSED)
+        {
+            System.out.println("what?");
         }
     }
 }

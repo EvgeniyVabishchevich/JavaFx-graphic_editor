@@ -1,15 +1,16 @@
 package editor;
 
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 
 public class PencilInstrument implements Instrument {
 
     private int pencilThickness;
+
+    private boolean shiftDown = false;
+    private double startY;
 
     PencilInstrument()
     {
@@ -20,14 +21,28 @@ public class PencilInstrument implements Instrument {
     {
             GraphicsContext gc = canvas.getGraphicsContext2D();
 
-            if (event.getEventType() == MouseEvent.MOUSE_DRAGGED)
+            if (event.getEventType() == MouseEvent.MOUSE_PRESSED)
             {
                 MouseEvent mouseEvent = (MouseEvent) event;
-                gc.fillOval(mouseEvent.getX(), mouseEvent.getY(), pencilThickness, pencilThickness);
+                startY = mouseEvent.getY();
             }
-            if (event.getEventType() == KeyEvent.KEY_PRESSED)
+
+            if (event.getEventType() == MouseEvent.MOUSE_DRAGGED) {
+                if (!shiftDown) {
+                    MouseEvent mouseEvent = (MouseEvent) event;
+                    gc.fillOval(mouseEvent.getX(), mouseEvent.getY(), pencilThickness, pencilThickness);
+                    startY = mouseEvent.getY();
+                }
+                if (shiftDown) {
+                    MouseEvent mouseEvent = (MouseEvent) event;
+                    gc.fillOval(mouseEvent.getX(), startY, pencilThickness, pencilThickness);
+                }
+            }
+            if (event.getEventType() == KeyEvent.KEY_PRESSED || event.getEventType() == KeyEvent.KEY_RELEASED)
             {
                 KeyEvent keyEvent = (KeyEvent) event;
+                if(keyEvent.isShiftDown()) shiftDown = true;
+                else shiftDown = false;
                 System.out.println("Key event");
             }
     }
