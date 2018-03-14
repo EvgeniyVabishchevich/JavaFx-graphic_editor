@@ -1,11 +1,13 @@
 package editor;
 
 import javafx.event.ActionEvent;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
 import java.lang.System;
 
 import javafx.scene.control.Separator;
+import javafx.scene.control.Skin;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -46,7 +48,10 @@ public class InstrumentsPanel extends GridPane
         currentInstrumentIndex = 0;
 
         Button but = new Button();
-        but.setStyle("-fx-graphic: url(pencil.png) ");
+
+        but.setStyle("-fx-graphic: url(pencil.png); -fx-padding: 1px ");
+
+
 
         this.getColumnConstraints().addAll(new ColumnConstraints(), new ColumnConstraints());
         arrayOfInstrumentsButtons = new Button[instruments.size()];

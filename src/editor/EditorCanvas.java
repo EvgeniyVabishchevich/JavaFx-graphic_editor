@@ -37,6 +37,7 @@ public class EditorCanvas extends Canvas {
         this.addEventHandler(MouseEvent.ANY, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                requestFocus();
                 instrumentsPanel.getCurrentInstrument().handleEvent(event, instance());
             }
         });

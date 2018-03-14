@@ -9,6 +9,8 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
+import java.security.Key;
+
 
 public class LineInstrument implements  Instrument {
 
@@ -58,9 +60,11 @@ public class LineInstrument implements  Instrument {
             mousePressed = false;
         }
 
-        if (event.getEventType() == KeyEvent.KEY_PRESSED)
+        if (event.getEventType() == KeyEvent.KEY_PRESSED || event.getEventType() == KeyEvent.KEY_RELEASED)
         {
-            System.out.println("what?");
+            KeyEvent keyEvent = (KeyEvent) event;
+            if(keyEvent.isShiftDown()) shiftDown = true;
+            else shiftDown = false;
         }
     }
 }

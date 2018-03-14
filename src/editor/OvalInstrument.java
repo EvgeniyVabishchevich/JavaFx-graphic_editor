@@ -3,7 +3,9 @@ package editor;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.InputEvent;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import static java.lang.Math.min;
 
 public class OvalInstrument implements Instrument {
     /**
@@ -21,6 +23,8 @@ public class OvalInstrument implements Instrument {
      */
     private WritableImage startWritableImage;
 
+    private boolean shiftDown = false;
+
     @Override
     public <T extends InputEvent> void handleEvent(T event, EditorCanvas canvas) {
         if (event.getEventType() == MouseEvent.MOUSE_PRESSED)
@@ -36,19 +40,30 @@ public class OvalInstrument implements Instrument {
         {
             canvas.getGraphicsContext2D().drawImage(startWritableImage, 0, 0);
             MouseEvent mouseEvent = (MouseEvent) event;
-            if(mouseEvent.getX() > startX && mouseEvent.getY() > startY)
-                canvas.getGraphicsContext2D().strokeOval(startX, startY, mouseEvent.getX() - startX, mouseEvent.getY() - startY);
-            if(mouseEvent.getX() < startX && mouseEvent.getY() < startY)
-                canvas.getGraphicsContext2D().strokeOval(mouseEvent.getX(), mouseEvent.getY(), startX - mouseEvent.getX(), startY - mouseEvent.getY());
-            if(mouseEvent.getX() > startX && mouseEvent.getY() < startY)
-                canvas.getGraphicsContext2D().strokeOval(startX, mouseEvent.getY(), mouseEvent.getX() - startX, startY - mouseEvent.getY());
-            if(mouseEvent.getX() < startX && mouseEvent.getY() > startY)
-                canvas.getGraphicsContext2D().strokeOval(mouseEvent.getX(), startY, startX - mouseEvent.getX(), mouseEvent.getY() - startY);
+            double width = Math.abs(startX - mouseEvent.getX());
+            double height = Math.abs(startY - mouseEvent.getY());
+            double topLeftX = Math.min(startX, mouseEvent.getX());
+            double topLeftY = Math.min(startY, mouseEvent.getY());
+            if(shiftDown)
+            {
+                width = height = Math.min(width, height);
+                topLeftX = (mouseEvent.getX() - startX > 0) ? topLeftX : Math.max(startX, mouseEvent.getX()) - width;
+                topLeftY = (mouseEvent.getY() - startY > 0) ? topLeftY : Math.max(startY, mouseEvent.getY()) - height;
+
+            }
+
+            canvas.getGraphicsContext2D().strokeOval(topLeftX, topLeftY, width, height);
         }
 
         if (event.getEventType() == MouseEvent.MOUSE_RELEASED)
         {
             mousePressed = false;
+        }
+
+        if (event.getEventType() == KeyEvent.KEY_PRESSED || event.getEventType() == KeyEvent.KEY_RELEASED)
+        {
+            KeyEvent keyEvent = (KeyEvent) event;
+            shiftDown = (keyEvent.isShiftDown()) ? true : false;
         }
     }
 }

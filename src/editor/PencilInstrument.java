@@ -41,9 +41,7 @@ public class PencilInstrument implements Instrument {
             if (event.getEventType() == KeyEvent.KEY_PRESSED || event.getEventType() == KeyEvent.KEY_RELEASED)
             {
                 KeyEvent keyEvent = (KeyEvent) event;
-                if(keyEvent.isShiftDown()) shiftDown = true;
-                else shiftDown = false;
-                System.out.println("Key event");
+                shiftDown = (keyEvent.isShiftDown()) ? true : false;
             }
     }
 }
