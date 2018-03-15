@@ -1,6 +1,7 @@
 package editor;
 
 import javafx.scene.SnapshotParameters;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyEvent;
@@ -27,6 +28,10 @@ public class OvalInstrument implements Instrument {
 
     @Override
     public <T extends InputEvent> void handleEvent(T event, EditorCanvas canvas) {
+
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setFill(canvas.getInstrumentPanel().getCurrentMainColor());
+
         if (event.getEventType() == MouseEvent.MOUSE_PRESSED)
         {
             mousePressed = true;
@@ -38,7 +43,7 @@ public class OvalInstrument implements Instrument {
 
         if (event.getEventType() == MouseEvent.MOUSE_DRAGGED && mousePressed)
         {
-            canvas.getGraphicsContext2D().drawImage(startWritableImage, 0, 0);
+            gc.drawImage(startWritableImage, 0, 0);
             MouseEvent mouseEvent = (MouseEvent) event;
             double width = Math.abs(startX - mouseEvent.getX());
             double height = Math.abs(startY - mouseEvent.getY());
@@ -52,7 +57,7 @@ public class OvalInstrument implements Instrument {
 
             }
 
-            canvas.getGraphicsContext2D().strokeOval(topLeftX, topLeftY, width, height);
+            gc.strokeOval(topLeftX, topLeftY, width, height);
         }
 
         if (event.getEventType() == MouseEvent.MOUSE_RELEASED)

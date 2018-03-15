@@ -122,5 +122,10 @@ public class EditorCanvas extends Canvas {
         }
     }
 
+    public InstrumentsPanel getInstrumentPanel()
+    {
+        return this.instrumentsPanel;
+    }
+
 }
 

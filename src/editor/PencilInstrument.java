@@ -20,6 +20,7 @@ public class PencilInstrument implements Instrument {
     public <T extends InputEvent> void handleEvent(T event, EditorCanvas canvas)
     {
             GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setFill(canvas.getInstrumentPanel().getCurrentMainColor());
 
             if (event.getEventType() == MouseEvent.MOUSE_PRESSED)
             {

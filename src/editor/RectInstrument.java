@@ -1,6 +1,7 @@
 package editor;
 
 import javafx.scene.SnapshotParameters;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyEvent;
@@ -26,6 +27,10 @@ public class RectInstrument implements Instrument {
 
     @Override
     public <T extends InputEvent> void handleEvent(T event, EditorCanvas canvas) {
+
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setFill(canvas.getInstrumentPanel().getCurrentMainColor());
+
         if (event.getEventType() == MouseEvent.MOUSE_PRESSED)
         {
             mousePressed = true;
@@ -37,7 +42,7 @@ public class RectInstrument implements Instrument {
 
         if (event.getEventType() == MouseEvent.MOUSE_DRAGGED && mousePressed)
         {
-            canvas.getGraphicsContext2D().drawImage(startWritableImage, 0, 0);
+            gc.drawImage(startWritableImage, 0, 0);
             MouseEvent mouseEvent = (MouseEvent) event;
             double width = Math.abs(startX - mouseEvent.getX());
             double height = Math.abs(startY - mouseEvent.getY());
@@ -50,7 +55,7 @@ public class RectInstrument implements Instrument {
                 topLeftY = (mouseEvent.getY() - startY > 0) ? topLeftY : Math.max(startY, mouseEvent.getY()) - height;
             }
 
-            canvas.getGraphicsContext2D().strokeRect(topLeftX, topLeftY, width, height);
+            gc.strokeRect(topLeftX, topLeftY, width, height);
         }
 
         if (event.getEventType() == MouseEvent.MOUSE_RELEASED)

@@ -1,6 +1,7 @@
 package editor;
 
 import javafx.scene.SnapshotParameters;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -37,6 +38,9 @@ public class LineInstrument implements  Instrument {
     @Override
     public <T extends InputEvent> void handleEvent(T event, EditorCanvas canvas) {
 
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setFill(canvas.getInstrumentPanel().getCurrentMainColor());
+
         if (event.getEventType() == MouseEvent.MOUSE_PRESSED)
         {
             mousePressed = true;
@@ -48,11 +52,11 @@ public class LineInstrument implements  Instrument {
 
         if (event.getEventType() == MouseEvent.MOUSE_DRAGGED && mousePressed)
         {
-            canvas.getGraphicsContext2D().drawImage(startWritableImage, 0, 0);
+           gc.drawImage(startWritableImage, 0, 0);
             MouseEvent mouseEvent = (MouseEvent) event;
             if(shiftDown)
-            canvas.getGraphicsContext2D().strokeLine(startX, startY, mouseEvent.getX(), startY);
-            else canvas.getGraphicsContext2D().strokeLine(startX, startY, mouseEvent.getX(), mouseEvent.getY());
+            gc.strokeLine(startX, startY, mouseEvent.getX(), startY);
+            else gc.strokeLine(startX, startY, mouseEvent.getX(), mouseEvent.getY());
         }
 
         if (event.getEventType() == MouseEvent.MOUSE_RELEASED)
@@ -63,8 +67,7 @@ public class LineInstrument implements  Instrument {
         if (event.getEventType() == KeyEvent.KEY_PRESSED || event.getEventType() == KeyEvent.KEY_RELEASED)
         {
             KeyEvent keyEvent = (KeyEvent) event;
-            if(keyEvent.isShiftDown()) shiftDown = true;
-            else shiftDown = false;
+            shiftDown = (keyEvent.isShiftDown()) ? true : false;
         }
     }
 }

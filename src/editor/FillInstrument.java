@@ -1,6 +1,7 @@
 package editor;
 
 import javafx.scene.SnapshotParameters;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
