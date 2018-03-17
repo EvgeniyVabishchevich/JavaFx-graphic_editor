@@ -1,5 +1,6 @@
 package editor;
 
+import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyEvent;
@@ -10,7 +11,10 @@ public class PencilInstrument implements Instrument {
     private int pencilThickness;
 
     private boolean shiftDown = false;
+
     private double startY;
+
+    private boolean mousePressed;
 
     PencilInstrument()
     {
@@ -24,11 +28,12 @@ public class PencilInstrument implements Instrument {
 
             if (event.getEventType() == MouseEvent.MOUSE_PRESSED)
             {
+                mousePressed = true;
                 MouseEvent mouseEvent = (MouseEvent) event;
                 startY = mouseEvent.getY();
             }
 
-            if (event.getEventType() == MouseEvent.MOUSE_DRAGGED) {
+            if (event.getEventType() == MouseEvent.MOUSE_DRAGGED && mousePressed) {
                 if (!shiftDown) {
                     MouseEvent mouseEvent = (MouseEvent) event;
                     gc.fillOval(mouseEvent.getX(), mouseEvent.getY(), pencilThickness, pencilThickness);
@@ -39,6 +44,13 @@ public class PencilInstrument implements Instrument {
                     gc.fillOval(mouseEvent.getX(), startY, pencilThickness, pencilThickness);
                 }
             }
+
+            if (event.getEventType() == MouseEvent.MOUSE_RELEASED)
+            {
+                canvas.getSnapshot(canvas);
+                mousePressed = false;
+            }
+
             if (event.getEventType() == KeyEvent.KEY_PRESSED || event.getEventType() == KeyEvent.KEY_RELEASED)
             {
                 KeyEvent keyEvent = (KeyEvent) event;

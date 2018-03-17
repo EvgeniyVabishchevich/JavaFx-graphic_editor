@@ -66,7 +66,9 @@ public class InstrumentsPanel extends GridPane
             }
         }
 
-        ColorPicker colorPicker = new ColorPicker();
+        ColorPicker colorPicker = new ColorPicker(Color.BLACK);
+        mainColor = colorPicker.getValue();
+
         this.add(colorPicker, 0, arrayOfInstrumentsButtons.length/2 + 1, 2, 1);
 
         colorPicker.setOnAction(new EventHandler<ActionEvent>() {
@@ -76,18 +78,23 @@ public class InstrumentsPanel extends GridPane
             }
         });
 
+        /**
+         * Добавление изображений инструментов для кнопок
+         */
         arrayOfInstrumentsButtons[0].setStyle("-fx-graphic: url(pencil.png); -fx-padding: 1px ");
         arrayOfInstrumentsButtons[1].setStyle("-fx-graphic: url(fillinstrument.png); -fx-padding: 1px ");
         arrayOfInstrumentsButtons[2].setStyle("-fx-graphic: url(line.png); -fx-padding: 1px ");
         arrayOfInstrumentsButtons[3].setStyle("-fx-graphic: url(rectangle.png); -fx-padding: 1px ");
         arrayOfInstrumentsButtons[4].setStyle("-fx-graphic: url(circle.png); -fx-padding: 1px ");
 
+
         for(int i = 0; i < arrayOfInstrumentsButtons.length; i++) {
+            final int index = i;
             arrayOfInstrumentsButtons[i].setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    currentInstrumentIndex = Arrays.asList(arrayOfInstrumentsButtons).indexOf(this);
-                    System.out.println(getCurrentInstrument().getClass().getName());
+                    currentInstrumentIndex = index;
+                            System.out.println(getCurrentInstrument().getClass().getName());
                 }
             });
         }

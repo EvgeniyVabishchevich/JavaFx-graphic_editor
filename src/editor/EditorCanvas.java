@@ -6,8 +6,7 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser;
@@ -15,6 +14,9 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.security.Key;
+import java.util.LinkedList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 
 public class EditorCanvas extends Canvas {
@@ -28,9 +30,20 @@ public class EditorCanvas extends Canvas {
         return this;
     }
 
+    /**
+     * Список содержащий скрины холста, пополняющийся после каждого действия любого инструмента
+     */
+    private LinkedList<WritableImage> snapshots = new LinkedList();
+
+    /**
+     * Комбинация клавиш для функции 'назад'
+     */
+    private static final KeyCombination back = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
+
     public EditorCanvas(int width, int height, InstrumentsPanel instrumentsPanel)
     {
         super(width, height);
+
         clear(Color.WHITE);
 
         this.instrumentsPanel = instrumentsPanel;
@@ -46,6 +59,16 @@ public class EditorCanvas extends Canvas {
             @Override
             public void handle(KeyEvent keyEvent) {
                 instrumentsPanel.getCurrentInstrument().handleEvent(keyEvent, instance());
+            }
+        });
+
+        this.addEventHandler(KeyEvent.ANY, new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if(back.match(event))
+                {
+                    setSnapshot(getThis());
+                }
             }
         });
 
@@ -110,7 +133,7 @@ public class EditorCanvas extends Canvas {
     }
 
     /**
-     * Функция окраски холста в белый
+     * Функция окраски холста
      */
     public void clear(Color color)
     {
@@ -127,5 +150,29 @@ public class EditorCanvas extends Canvas {
         return this.instrumentsPanel;
     }
 
-}
+    /**
+     * Добавляет скрин холста в список snapshots
+     * @param canvas холст
+     */
+    public void getSnapshot(EditorCanvas canvas)
+    {
+        snapshots.add(canvas.snapshot(new SnapshotParameters(), null));
+        System.out.println("Added");
+    }
 
+    /**
+     * Достает и удаляет последнее изобажение из списка,рисуя его на холст
+     * @param canvas холст
+     */
+    public void setSnapshot(EditorCanvas canvas)
+    {
+        canvas.getGraphicsContext2D().drawImage(snapshots.pollLast(), 0, 0);
+        System.out.println("Removed");
+    }
+
+    public EditorCanvas getThis()
+    {
+        return this;
+    }
+
+}

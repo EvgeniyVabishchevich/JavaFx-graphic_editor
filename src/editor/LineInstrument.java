@@ -39,7 +39,7 @@ public class LineInstrument implements  Instrument {
     public <T extends InputEvent> void handleEvent(T event, EditorCanvas canvas) {
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(canvas.getInstrumentPanel().getCurrentMainColor());
+        gc.setStroke(canvas.getInstrumentPanel().getCurrentMainColor());
 
         if (event.getEventType() == MouseEvent.MOUSE_PRESSED)
         {
@@ -61,6 +61,7 @@ public class LineInstrument implements  Instrument {
 
         if (event.getEventType() == MouseEvent.MOUSE_RELEASED)
         {
+            if(startWritableImage != canvas.snapshot(new SnapshotParameters(), null)) canvas.getSnapshot(canvas);
             mousePressed = false;
         }
 

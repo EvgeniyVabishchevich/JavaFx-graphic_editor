@@ -17,16 +17,20 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class FillInstrument implements Instrument {
 
-    public Color fillColor = Color.WHITE;
+    private Color fillColor;
 
     public <T extends InputEvent> void handleEvent(T event, EditorCanvas canvas) {
 
-        if (event.getEventType() == MouseEvent.MOUSE_PRESSED) {
+        fillColor = canvas.getInstrumentPanel().getCurrentMainColor();
+
+        if (event.getEventType() == MouseEvent.MOUSE_PRESSED)
+        {
             MouseEvent mouseEvent = (MouseEvent) event;
             paint(new Pixel((int) mouseEvent.getX(), (int) mouseEvent.getY()), canvas);
+            canvas.getSnapshot(canvas);
         }
-
-        if (event.getEventType() == KeyEvent.KEY_PRESSED) {
+        if (event.getEventType() == KeyEvent.KEY_PRESSED)
+        {
 
         }
     }
