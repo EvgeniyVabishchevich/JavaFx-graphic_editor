@@ -60,7 +60,7 @@ public class RectInstrument implements Instrument {
 
         if (event.getEventType() == MouseEvent.MOUSE_RELEASED)
         {
-            if(startWritableImage != canvas.snapshot(new SnapshotParameters(), null)) canvas.getSnapshot(canvas);
+            if(!startWritableImage.equals(canvas.snapshot(new SnapshotParameters(), null))) canvas.getSnapshot(canvas);
             mousePressed = false;
         }
 

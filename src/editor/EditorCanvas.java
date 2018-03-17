@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.security.Key;
 import java.util.LinkedList;
+import java.util.Stack;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 
@@ -33,7 +34,7 @@ public class EditorCanvas extends Canvas {
     /**
      * Список содержащий скрины холста, пополняющийся после каждого действия любого инструмента
      */
-    private LinkedList<WritableImage> snapshots = new LinkedList();
+    private Stack<WritableImage> snapshots = new Stack();
 
     /**
      * Комбинация клавиш для функции 'назад'
@@ -65,7 +66,7 @@ public class EditorCanvas extends Canvas {
         this.addEventHandler(KeyEvent.ANY, new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                if(back.match(event))
+                if (event.isControlDown() && event.getCode() == KeyCode.Z && event.getEventType() == KeyEvent.KEY_RELEASED)
                 {
                     setSnapshot(getThis());
                 }
@@ -156,7 +157,7 @@ public class EditorCanvas extends Canvas {
      */
     public void getSnapshot(EditorCanvas canvas)
     {
-        snapshots.add(canvas.snapshot(new SnapshotParameters(), null));
+        snapshots.push(canvas.snapshot(new SnapshotParameters(), null));
         System.out.println("Added");
     }
 
@@ -166,8 +167,10 @@ public class EditorCanvas extends Canvas {
      */
     public void setSnapshot(EditorCanvas canvas)
     {
-        canvas.getGraphicsContext2D().drawImage(snapshots.pollLast(), 0, 0);
-        System.out.println("Removed");
+        if(!snapshots.empty()) {
+            canvas.getGraphicsContext2D().drawImage(snapshots.pop(), 0, 0);
+            System.out.println("Removed");
+        }
     }
 
     public EditorCanvas getThis()

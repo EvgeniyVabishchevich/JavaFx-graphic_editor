@@ -62,7 +62,7 @@ public class OvalInstrument implements Instrument {
 
         if (event.getEventType() == MouseEvent.MOUSE_RELEASED)
         {
-             canvas.getSnapshot(canvas);
+            if(startWritableImage != canvas.snapshot(new SnapshotParameters(), null)) canvas.getSnapshot(canvas);
             mousePressed = false;
         }
 
