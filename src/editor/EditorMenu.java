@@ -21,48 +21,59 @@ public class EditorMenu extends MenuBar {
         MenuItem saveMenuItem = new MenuItem("Save");
         MenuItem exitMenuItem = new MenuItem("Exit");
 
+        /**
+         * Создание нового файла и сохранение старого
+         */
         newMenuItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Stage newFileStage = new Stage();
-                GridPane newFileRoot = new GridPane();
+                if(!canvas.isSnapshotsEmpty()) {
 
-                newFileRoot.getColumnConstraints().addAll(new ColumnConstraints(), new ColumnConstraints());
-                Label heightLbl = new Label("Height");
-                Label weightLbl = new Label("Weight");
-                TextField height = new TextField("0");
-                TextField width = new TextField("0");
+                    Stage questionToSaveStage = new Stage();
+                    GridPane questionToSaveRoot = new GridPane();
 
-                Button cancel = new Button("Cancel");
-                Button ok = new Button("Ok");
+                    questionToSaveRoot.getColumnConstraints().addAll(new ColumnConstraints(), new ColumnConstraints(), new ColumnConstraints());
 
+                    Label toSaveLbl = new Label("Save the current file?");
 
-                cancel.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        newFileStage.close();
-                    }
-                });
+                    Button yes = new Button("Save");
+                    Button no = new Button("Not Save");
+                    Button cancel = new Button("Cancel");
 
-                ok.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        canvas.clear(Color.WHITE);
-                        canvas.setHeight(Double.parseDouble(height.getText()));
-                        canvas.setWidth(Double.parseDouble(width.getText()));
-                        newFileStage.close();
-                    }
-                });
+                    questionToSaveRoot.add(toSaveLbl, 0, 0, 3, 1);
+                    questionToSaveRoot.add(yes, 0, 1);
+                    questionToSaveRoot.add(no, 1, 1);
+                    questionToSaveRoot.add(cancel, 2, 1);
 
-                newFileRoot.add(heightLbl, 0, 0);
-                newFileRoot.add(weightLbl, 0, 1);
-                newFileRoot.add(height, 1,0);
-                newFileRoot.add(width, 1,1);
-                newFileRoot.add(cancel, 0, 2);
-                newFileRoot.add(ok, 1, 2);
+                    yes.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            canvas.saveImage(stage);
+                            newFile(canvas);
+                            questionToSaveStage.close();
+                        }
+                    });
 
-                newFileStage.setScene(new Scene(newFileRoot, newFileRoot.getMinWidth(), newFileRoot.getMinHeight()));
-                newFileStage.show();
+                    no.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            newFile(canvas);
+                            questionToSaveStage.close();
+                        }
+                    });
+
+                    cancel.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            questionToSaveStage.close();
+                        }
+                    });
+
+                    questionToSaveStage.setScene(new Scene(questionToSaveRoot, questionToSaveRoot.getMinWidth(), questionToSaveRoot.getMinHeight()));
+                    questionToSaveStage.show();
+                }
+                else
+                    newFile(canvas);
             }
         });
 
@@ -85,5 +96,51 @@ public class EditorMenu extends MenuBar {
         fileMenu.getItems().addAll(newMenuItem,openMenuItem,saveMenuItem,exitMenuItem);
 
         this.getMenus().addAll(fileMenu);
+    }
+
+    /**
+     * Создание нового холста
+     * @param canvas холст
+     */
+    private void newFile(EditorCanvas canvas)
+    {
+        Stage newFileStage = new Stage();
+        GridPane newFileRoot = new GridPane();
+
+        newFileRoot.getColumnConstraints().addAll(new ColumnConstraints(), new ColumnConstraints());
+        Label heightLbl = new Label("Height");
+        Label weightLbl = new Label("Weight");
+        TextField height = new TextField("0");
+        TextField width = new TextField("0");
+
+        Button cancel = new Button("Cancel");
+        Button ok = new Button("Ok");
+
+        cancel.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                newFileStage.close();
+            }
+        });
+
+        ok.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                canvas.clear(Color.WHITE);
+                canvas.setHeight(Double.parseDouble(height.getText()));
+                canvas.setWidth(Double.parseDouble(width.getText()));
+                newFileStage.close();
+            }
+        });
+
+        newFileRoot.add(heightLbl, 0, 0);
+        newFileRoot.add(weightLbl, 0, 1);
+        newFileRoot.add(height, 1,0);
+        newFileRoot.add(width, 1,1);
+        newFileRoot.add(cancel, 0, 2);
+        newFileRoot.add(ok, 1, 2);
+
+        newFileStage.setScene(new Scene(newFileRoot, newFileRoot.getMinWidth(), newFileRoot.getMinHeight()));
+        newFileStage.show();
     }
 }

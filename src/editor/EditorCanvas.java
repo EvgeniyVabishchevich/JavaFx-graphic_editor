@@ -161,8 +161,14 @@ public class EditorCanvas extends Canvas {
      */
     public void undoAction()
     {
-        if(!snapshots.empty()) {
+        if(isSnapshotsEmpty()) {
             getGraphicsContext2D().drawImage(snapshots.pop(), 0, 0);
         }
     }
+
+    public boolean isSnapshotsEmpty()
+    {
+        return (snapshots.empty()) ? true : false;
+    }
 }
+
