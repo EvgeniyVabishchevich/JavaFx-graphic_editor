@@ -1,9 +1,6 @@
 package editor;
 
-import javafx.scene.canvas.Canvas;
 import javafx.scene.input.InputEvent;
-import javafx.scene.input.MouseEvent;
-
 
 public interface Instrument
 {

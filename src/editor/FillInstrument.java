@@ -1,7 +1,6 @@
 package editor;
 
 import javafx.scene.SnapshotParameters;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
@@ -17,6 +16,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class FillInstrument implements Instrument {
 
+    /**
+     * цвет заливки
+     */
     private Color fillColor;
 
     public <T extends InputEvent> void handleEvent(T event, EditorCanvas canvas) {
@@ -26,12 +28,8 @@ public class FillInstrument implements Instrument {
         if (event.getEventType() == MouseEvent.MOUSE_PRESSED)
         {
             MouseEvent mouseEvent = (MouseEvent) event;
+            canvas.addSnapshot(canvas.snapshot(new SnapshotParameters(), null));
             paint(new Pixel((int) mouseEvent.getX(), (int) mouseEvent.getY()), canvas);
-            canvas.getSnapshot(canvas);
-        }
-        if (event.getEventType() == KeyEvent.KEY_PRESSED)
-        {
-
         }
     }
 
@@ -57,12 +55,16 @@ public class FillInstrument implements Instrument {
             if (!startColor.equals(pixelReader.getColor(startPixel.x, startPixel.y))) continue;
             pixelWriter.setColor(startPixel.x, startPixel.y, fillColor);
 
+            // Правый
             if (startPixel.x + 1 < canvas.getWidth()) pixels.add(new Pixel(startPixel.x + 1, startPixel.y));
 
+            // Левый
             if (startPixel.x - 1 > 0) pixels.add(new Pixel(startPixel.x - 1, startPixel.y));
 
+            // Верхний
             if (startPixel.y + 1 < canvas.getHeight()) pixels.add(new Pixel(startPixel.x, startPixel.y + 1));
 
+            // Нижний
             if (startPixel.y - 1 > 0) pixels.add(new Pixel(startPixel.x, startPixel.y - 1));
         }
         canvas.getGraphicsContext2D().drawImage(writableImage, 0, 0);

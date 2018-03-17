@@ -7,6 +7,9 @@ import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
+/**
+ * Класс для рисования прямоугольника
+ */
 public class RectInstrument implements Instrument {
     /**
      * Указывает зажата ли ЛКМ
@@ -19,7 +22,7 @@ public class RectInstrument implements Instrument {
     private double startX, startY;
 
     /**
-     * Картинка, до начала рисования отрезка
+     * Картинка, до начала рисования прямоугольника
      */
     private WritableImage startWritableImage;
 
@@ -60,14 +63,14 @@ public class RectInstrument implements Instrument {
 
         if (event.getEventType() == MouseEvent.MOUSE_RELEASED)
         {
-            if(!startWritableImage.equals(canvas.snapshot(new SnapshotParameters(), null))) canvas.getSnapshot(canvas);
+            canvas.addSnapshot(startWritableImage);
             mousePressed = false;
         }
 
         if (event.getEventType() == KeyEvent.KEY_PRESSED || event.getEventType() == KeyEvent.KEY_RELEASED)
         {
             KeyEvent keyEvent = (KeyEvent) event;
-            shiftDown = (keyEvent.isShiftDown()) ? true : false;
+            shiftDown = (keyEvent.isShiftDown());
         }
     }
 }

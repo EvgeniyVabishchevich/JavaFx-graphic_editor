@@ -5,13 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
-import javafx.scene.paint.Color;
-
-import java.security.Key;
-
 
 public class LineInstrument implements  Instrument {
 
@@ -61,14 +55,14 @@ public class LineInstrument implements  Instrument {
 
         if (event.getEventType() == MouseEvent.MOUSE_RELEASED)
         {
-            if(startWritableImage != canvas.snapshot(new SnapshotParameters(), null)) canvas.getSnapshot(canvas);
+            canvas.addSnapshot(startWritableImage);
             mousePressed = false;
         }
 
         if (event.getEventType() == KeyEvent.KEY_PRESSED || event.getEventType() == KeyEvent.KEY_RELEASED)
         {
             KeyEvent keyEvent = (KeyEvent) event;
-            shiftDown = (keyEvent.isShiftDown()) ? true : false;
+            shiftDown = (keyEvent.isShiftDown());
         }
     }
 }

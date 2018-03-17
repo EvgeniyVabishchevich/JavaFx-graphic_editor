@@ -2,19 +2,37 @@ package editor;
 
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
 public class PencilInstrument implements Instrument {
 
+    /**
+     * Толщина карандаша
+     */
     private int pencilThickness;
 
+    /**
+     * Нажат ли шифт
+     */
     private boolean shiftDown = false;
 
+    /**
+     * Координата по y, первоначального нажатия мышки
+     */
     private double startY;
 
+    /**
+     * Нажата ли мышка
+     */
     private boolean mousePressed;
+
+    /**
+     * Картинка, до начала рисования карандашом
+     */
+    private WritableImage startWritableImage;
 
     PencilInstrument()
     {
@@ -28,6 +46,7 @@ public class PencilInstrument implements Instrument {
 
             if (event.getEventType() == MouseEvent.MOUSE_PRESSED)
             {
+                startWritableImage = canvas.snapshot(new SnapshotParameters(), null);
                 mousePressed = true;
                 MouseEvent mouseEvent = (MouseEvent) event;
                 startY = mouseEvent.getY();
@@ -47,14 +66,14 @@ public class PencilInstrument implements Instrument {
 
             if (event.getEventType() == MouseEvent.MOUSE_RELEASED)
             {
-                canvas.getSnapshot(canvas);
+                canvas.addSnapshot(startWritableImage);
                 mousePressed = false;
             }
 
             if (event.getEventType() == KeyEvent.KEY_PRESSED || event.getEventType() == KeyEvent.KEY_RELEASED)
             {
                 KeyEvent keyEvent = (KeyEvent) event;
-                shiftDown = (keyEvent.isShiftDown()) ? true : false;
+                shiftDown = (keyEvent.isShiftDown());
             }
     }
 }

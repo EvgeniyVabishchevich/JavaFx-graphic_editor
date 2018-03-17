@@ -1,22 +1,13 @@
 package editor;
 
 import javafx.event.ActionEvent;
-import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.control.*;
-
 import java.lang.System;
-
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.event.EventHandler;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -34,9 +25,15 @@ public class InstrumentsPanel extends GridPane
      */
     private int currentInstrumentIndex;
 
+    /**
+     * Массив кнопок для инструментов
+     */
     private Button [] arrayOfInstrumentsButtons;
 
-    private Color mainColor;
+    /**
+     * Выбранный цвет рисования
+     */
+    private Color currentMainColor;
 
     public InstrumentsPanel()
     {
@@ -67,14 +64,14 @@ public class InstrumentsPanel extends GridPane
         }
 
         ColorPicker colorPicker = new ColorPicker(Color.BLACK);
-        mainColor = colorPicker.getValue();
+        currentMainColor = colorPicker.getValue();
 
         this.add(colorPicker, 0, arrayOfInstrumentsButtons.length/2 + 1, 2, 1);
 
         colorPicker.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                mainColor = colorPicker.getValue();
+                currentMainColor = colorPicker.getValue();
             }
         });
 
@@ -94,7 +91,7 @@ public class InstrumentsPanel extends GridPane
                 @Override
                 public void handle(ActionEvent event) {
                     currentInstrumentIndex = index;
-                            System.out.println(getCurrentInstrument().getClass().getName());
+                    EditorLog.log(getCurrentInstrument().getClass().getName());
                 }
             });
         }
@@ -109,9 +106,12 @@ public class InstrumentsPanel extends GridPane
         return instruments.get(currentInstrumentIndex);
     }
 
+    /**
+     * @return текущий цвет рисования
+     */
     public Color getCurrentMainColor()
     {
-        return this.mainColor;
+        return this.currentMainColor;
     }
 
 }

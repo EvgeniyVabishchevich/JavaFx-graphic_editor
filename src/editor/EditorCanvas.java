@@ -14,33 +14,32 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.security.Key;
-import java.util.LinkedList;
 import java.util.Stack;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 
 public class EditorCanvas extends Canvas {
 
-    final FileChooser fileChooser = new FileChooser();
+    /**
+     * Сохраняет и открывает файлы
+     */
+    final private FileChooser fileChooser = new FileChooser();
 
+    /**
+     * Обрабатывает выбор инструмента
+     */
     private InstrumentsPanel instrumentsPanel;
 
-    private EditorCanvas instance()
-    {
-        return this;
-    }
+    /**
+     * Скрины состояний холста, используются для отмены действий в редакторе
+     */
+    private Stack<WritableImage> snapshots = new Stack<>();
 
     /**
-     * Список содержащий скрины холста, пополняющийся после каждого действия любого инструмента
+     * EdidorCanvas холст
+     * @param width ширина
+     * @param height высота
+     * @param instrumentsPanel
      */
-    private Stack<WritableImage> snapshots = new Stack();
-
-    /**
-     * Комбинация клавиш для функции 'назад'
-     */
-    private static final KeyCombination back = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
-
     public EditorCanvas(int width, int height, InstrumentsPanel instrumentsPanel)
     {
         super(width, height);
@@ -48,28 +47,23 @@ public class EditorCanvas extends Canvas {
         clear(Color.WHITE);
 
         this.instrumentsPanel = instrumentsPanel;
+
         this.addEventHandler(MouseEvent.ANY, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 requestFocus();
-                instrumentsPanel.getCurrentInstrument().handleEvent(event, instance());
+                instrumentsPanel.getCurrentInstrument().handleEvent(event, EditorCanvas.this);
             }
         });
 
         this.addEventHandler(KeyEvent.ANY, new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent keyEvent) {
-                instrumentsPanel.getCurrentInstrument().handleEvent(keyEvent, instance());
-            }
-        });
-
-        this.addEventHandler(KeyEvent.ANY, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.isControlDown() && event.getCode() == KeyCode.Z && event.getEventType() == KeyEvent.KEY_RELEASED)
+                if (keyEvent.isControlDown() && keyEvent.getCode() == KeyCode.Z && keyEvent.getEventType() == KeyEvent.KEY_RELEASED)
                 {
-                    setSnapshot(getThis());
+                    undoAction();
                 }
+                instrumentsPanel.getCurrentInstrument().handleEvent(keyEvent, EditorCanvas.this);
             }
         });
 
@@ -134,7 +128,7 @@ public class EditorCanvas extends Canvas {
     }
 
     /**
-     * Функция окраски холста
+     * Функция окраски холста заданным цветом
      */
     public void clear(Color color)
     {
@@ -146,6 +140,9 @@ public class EditorCanvas extends Canvas {
         }
     }
 
+    /**
+     * @return Панель инструментов
+     */
     public InstrumentsPanel getInstrumentPanel()
     {
         return this.instrumentsPanel;
@@ -153,29 +150,19 @@ public class EditorCanvas extends Canvas {
 
     /**
      * Добавляет скрин холста в список snapshots
-     * @param canvas холст
      */
-    public void getSnapshot(EditorCanvas canvas)
+    public void addSnapshot(WritableImage startWritableImage)
     {
-        snapshots.push(canvas.snapshot(new SnapshotParameters(), null));
-        System.out.println("Added");
+        snapshots.push(startWritableImage);
     }
 
     /**
-     * Достает и удаляет последнее изобажение из списка,рисуя его на холст
-     * @param canvas холст
+     * Отменяет действие на холсте
      */
-    public void setSnapshot(EditorCanvas canvas)
+    public void undoAction()
     {
         if(!snapshots.empty()) {
-            canvas.getGraphicsContext2D().drawImage(snapshots.pop(), 0, 0);
-            System.out.println("Removed");
+            getGraphicsContext2D().drawImage(snapshots.pop(), 0, 0);
         }
     }
-
-    public EditorCanvas getThis()
-    {
-        return this;
-    }
-
 }

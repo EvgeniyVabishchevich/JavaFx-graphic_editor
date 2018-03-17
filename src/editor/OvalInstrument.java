@@ -6,7 +6,6 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import static java.lang.Math.min;
 
 public class OvalInstrument implements Instrument {
     /**
@@ -20,10 +19,13 @@ public class OvalInstrument implements Instrument {
     private double startX, startY;
 
     /**
-     * Картинка, до начала рисования отрезка
+     * Картинка, до начала рисования овала
      */
     private WritableImage startWritableImage;
 
+    /**
+     * Нажат ли шифт
+     */
     private boolean shiftDown = false;
 
     @Override
@@ -62,14 +64,14 @@ public class OvalInstrument implements Instrument {
 
         if (event.getEventType() == MouseEvent.MOUSE_RELEASED)
         {
-            if(startWritableImage != canvas.snapshot(new SnapshotParameters(), null)) canvas.getSnapshot(canvas);
+            canvas.addSnapshot(startWritableImage);
             mousePressed = false;
         }
 
         if (event.getEventType() == KeyEvent.KEY_PRESSED || event.getEventType() == KeyEvent.KEY_RELEASED)
         {
             KeyEvent keyEvent = (KeyEvent) event;
-            shiftDown = (keyEvent.isShiftDown()) ? true : false;
+            shiftDown = (keyEvent.isShiftDown());
         }
     }
 }

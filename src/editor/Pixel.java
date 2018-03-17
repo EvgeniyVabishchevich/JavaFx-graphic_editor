@@ -4,10 +4,15 @@ package editor;
  * Pixel класс содержащий координаты пикселя
  */
 public class Pixel {
+
+    /**
+     * Координаты пикселя
+     */
     public int x,y;
-    public Pixel(int c_x, int c_y)
+
+    public Pixel(int x, int y)
     {
-        x = c_x;
-        y = c_y;
+        this.x = x;
+        this.y = y;
     }
 }

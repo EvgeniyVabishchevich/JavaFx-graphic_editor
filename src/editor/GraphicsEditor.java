@@ -1,12 +1,8 @@
 package editor;
 
-import com.sun.javafx.scene.control.skin.CustomColorDialog;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.ColorPicker;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class GraphicsEditor extends Application {
@@ -19,7 +15,7 @@ public class GraphicsEditor extends Application {
         primaryStage.setScene(new Scene(root, 800, 600));
 
         InstrumentsPanel instruments = new InstrumentsPanel();
-        EditorCanvas canvas = new EditorCanvas(400, 400, instruments);
+        EditorCanvas canvas = new EditorCanvas(500, 500, instruments);
         EditorMenu menu = new EditorMenu(canvas, primaryStage);
 
         root.setTop(menu);
@@ -33,4 +29,5 @@ public class GraphicsEditor extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
 }
