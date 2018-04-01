@@ -9,6 +9,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Transform;
+
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -39,7 +41,9 @@ public class FillInstrument implements Instrument {
      * @param canvas холст который будет изменяться
      */
     public void paint(Pixel startPixel, Canvas canvas) {
-        WritableImage writableImage = canvas.snapshot(new SnapshotParameters(), null);
+        SnapshotParameters snapshotParameters = new SnapshotParameters();
+        snapshotParameters.setTransform(Transform.scale(1/canvas.getScaleX(), 1/canvas.getScaleY()));
+        WritableImage writableImage = canvas.snapshot(snapshotParameters, null);
         PixelReader pixelReader = writableImage.getPixelReader();
         PixelWriter pixelWriter = writableImage.getPixelWriter();
 

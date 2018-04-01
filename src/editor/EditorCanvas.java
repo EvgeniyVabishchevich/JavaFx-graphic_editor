@@ -2,6 +2,7 @@ package editor;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -35,6 +36,16 @@ public class EditorCanvas extends Canvas {
     private Stack<WritableImage> snapshots = new Stack<>();
 
     /**
+     * Максимальный зум
+     */
+    final double MAXSCALE = 4;
+
+    /**
+     * Минимальный зум
+     */
+    final double MINSCALE = 0.25;
+
+    /**
      * EdidorCanvas холст
      * @param width ширина
      * @param height высота
@@ -63,9 +74,36 @@ public class EditorCanvas extends Canvas {
                 {
                     undoAction();
                 }
+                if (keyEvent.isControlDown() )
                 instrumentsPanel.getCurrentInstrument().handleEvent(keyEvent, EditorCanvas.this);
             }
         });
+
+        this.addEventHandler(ScrollEvent.ANY, new EventHandler<ScrollEvent>() {
+            @Override
+            public void handle(ScrollEvent event) {
+                if(event.isControlDown()){
+                    if(event.getDeltaY() > 0)
+                    {
+                        if(getScaleX() != MAXSCALE)
+                        {
+                            setScaleX(getScaleX() * 2);
+                            setScaleY(getScaleY() * 2);
+                        }
+                    }
+                    else
+                        {
+                            if(getScaleX() != MINSCALE)
+                            {
+                                setScaleX(getScaleX() / 2);
+                                setScaleY(getScaleY() / 2);
+                            }
+                        }
+                }
+            }
+        });
+
+
 
         fileChooser.getExtensionFilters().addAll
                 (

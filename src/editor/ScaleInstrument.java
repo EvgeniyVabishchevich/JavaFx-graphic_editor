@@ -6,7 +6,7 @@ import javafx.scene.input.MouseEvent;
 
 public class ScaleInstrument implements Instrument {
 
-    private final double MaxScale = 16,MinScale = 1;
+    private final double MaxScale = 4,MinScale = 1;
 
     @Override
     public <T extends InputEvent> void handleEvent(T event, EditorCanvas canvas) {
