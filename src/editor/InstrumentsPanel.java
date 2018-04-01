@@ -1,8 +1,10 @@
 package editor;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
-import java.lang.System;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.event.EventHandler;
@@ -35,6 +37,8 @@ public class InstrumentsPanel extends GridPane
      */
     private Color currentMainColor;
 
+    private double currentThickness;
+
     public InstrumentsPanel()
     {
         instruments = new ArrayList<>();
@@ -43,35 +47,45 @@ public class InstrumentsPanel extends GridPane
         instruments.add(new LineInstrument());
         instruments.add(new RectInstrument());
         instruments.add(new OvalInstrument());
+        instruments.add(new RubberInstrument());
+        instruments.add(new AllotmentInstrument());
+        instruments.add(new ScaleInstrument());
 
         currentInstrumentIndex = 0;
 
         this.getColumnConstraints().addAll(new ColumnConstraints(), new ColumnConstraints());
         arrayOfInstrumentsButtons = new Button[instruments.size()];
-        for(int i = 0; i < arrayOfInstrumentsButtons.length; i ++)
+
+        for(int i = 0; i < arrayOfInstrumentsButtons.length; i++)
         {
-            arrayOfInstrumentsButtons[i] = new Button();
-
-            if( i <= arrayOfInstrumentsButtons.length/2)
+            for(int j = 0; j < 2; j++)
             {
-             this.add(arrayOfInstrumentsButtons[i], 0, i);
-            }
-
-            if( i > arrayOfInstrumentsButtons.length/2 )
-            {
-                this.add(arrayOfInstrumentsButtons[i], 1, i - arrayOfInstrumentsButtons.length/2 - 1);
+                if(i*2+j >= arrayOfInstrumentsButtons.length) break;
+                arrayOfInstrumentsButtons[i*2 + j] = new Button();
+                this.add(arrayOfInstrumentsButtons[i*2 + j], j, i);
             }
         }
 
+        ChoiceBox choiceBox = new ChoiceBox(FXCollections.observableArrayList("1", "2", "3", "4", "5"));
         ColorPicker colorPicker = new ColorPicker(Color.BLACK);
         currentMainColor = colorPicker.getValue();
 
+
+
         this.add(colorPicker, 0, arrayOfInstrumentsButtons.length/2 + 1, 2, 1);
+        this.add(choiceBox, 0, arrayOfInstrumentsButtons.length/2 + 2, 2, 1);
 
         colorPicker.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 currentMainColor = colorPicker.getValue();
+            }
+        });
+
+        choiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                currentThickness = newValue.doubleValue() + 1;
             }
         });
 
@@ -83,6 +97,7 @@ public class InstrumentsPanel extends GridPane
         arrayOfInstrumentsButtons[2].setStyle("-fx-graphic: url(line.png); -fx-padding: 1px ");
         arrayOfInstrumentsButtons[3].setStyle("-fx-graphic: url(rectangle.png); -fx-padding: 1px ");
         arrayOfInstrumentsButtons[4].setStyle("-fx-graphic: url(circle.png); -fx-padding: 1px ");
+        arrayOfInstrumentsButtons[5].setStyle("-fx-graphic: url(rubber.png); -fx-padding: 1px ");
 
 
         for(int i = 0; i < arrayOfInstrumentsButtons.length; i++) {
@@ -111,7 +126,13 @@ public class InstrumentsPanel extends GridPane
      */
     public Color getCurrentMainColor()
     {
-        return this.currentMainColor;
+        return currentMainColor;
+    }
+
+    public double getCurrentThickness()
+    {
+        return currentThickness;
+
     }
 
 }

@@ -6,13 +6,9 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 
 public class PencilInstrument implements Instrument {
-
-    /**
-     * Толщина карандаша
-     */
-    private int pencilThickness;
 
     /**
      * Нажат ли шифт
@@ -34,15 +30,15 @@ public class PencilInstrument implements Instrument {
      */
     private WritableImage startWritableImage;
 
-    PencilInstrument()
-    {
-        pencilThickness = 3;
-    }
+    private double previousGetX = -1;
+    private double previousGetY = -1;
+
     @Override
     public <T extends InputEvent> void handleEvent(T event, EditorCanvas canvas)
     {
+            setFill(canvas);
             GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(canvas.getInstrumentPanel().getCurrentMainColor());
+            gc.setLineWidth(canvas.getInstrumentPanel().getCurrentThickness());
 
             if (event.getEventType() == MouseEvent.MOUSE_PRESSED)
             {
@@ -50,24 +46,25 @@ public class PencilInstrument implements Instrument {
                 mousePressed = true;
                 MouseEvent mouseEvent = (MouseEvent) event;
                 startY = mouseEvent.getY();
+
+                previousGetX = mouseEvent.getX();
+                previousGetY = mouseEvent.getY();
+
             }
 
             if (event.getEventType() == MouseEvent.MOUSE_DRAGGED && mousePressed) {
-                if (!shiftDown) {
-                    MouseEvent mouseEvent = (MouseEvent) event;
-                    gc.fillOval(mouseEvent.getX(), mouseEvent.getY(), pencilThickness, pencilThickness);
-                    startY = mouseEvent.getY();
-                }
-                if (shiftDown) {
-                    MouseEvent mouseEvent = (MouseEvent) event;
-                    gc.fillOval(mouseEvent.getX(), startY, pencilThickness, pencilThickness);
-                }
+                MouseEvent mouseEvent = (MouseEvent) event;
+
+                if(previousGetX != -1)gc.strokeLine(previousGetX, previousGetY, mouseEvent.getX(), mouseEvent.getY());
+                previousGetX = mouseEvent.getX();
+                previousGetY = mouseEvent.getY();
             }
 
             if (event.getEventType() == MouseEvent.MOUSE_RELEASED)
             {
                 canvas.addSnapshot(startWritableImage);
                 mousePressed = false;
+                previousGetX = -1;
             }
 
             if (event.getEventType() == KeyEvent.KEY_PRESSED || event.getEventType() == KeyEvent.KEY_RELEASED)
@@ -75,5 +72,10 @@ public class PencilInstrument implements Instrument {
                 KeyEvent keyEvent = (KeyEvent) event;
                 shiftDown = (keyEvent.isShiftDown());
             }
+    }
+
+    public void setFill(EditorCanvas canvas)
+    {
+        canvas.getGraphicsContext2D().setStroke(canvas.getInstrumentPanel().getCurrentMainColor());
     }
 }

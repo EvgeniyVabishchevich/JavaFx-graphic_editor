@@ -1,11 +1,21 @@
 package editor;
 
+import com.sun.javafx.geom.transform.Affine3D;
+import com.sun.javafx.geom.transform.BaseTransform;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.WritableImage;
+import javafx.scene.image.*;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.transform.Transform;
+import javafx.scene.transform.Translate;
+
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 /**
  * Класс для рисования прямоугольника
@@ -33,6 +43,7 @@ public class RectInstrument implements Instrument {
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setStroke(canvas.getInstrumentPanel().getCurrentMainColor());
+        gc.setLineWidth(canvas.getInstrumentPanel().getCurrentThickness());
 
         if (event.getEventType() == MouseEvent.MOUSE_PRESSED)
         {
@@ -40,12 +51,15 @@ public class RectInstrument implements Instrument {
             MouseEvent mouseEvent = (MouseEvent) event;
             startX = mouseEvent.getX();
             startY = mouseEvent.getY();
-            startWritableImage = canvas.snapshot(new SnapshotParameters(), null);
+
+            SnapshotParameters snapshotParameters = new SnapshotParameters();
+            snapshotParameters.setTransform(Transform.scale(1/canvas.getScaleX(), 1/canvas.getScaleY()));
+            startWritableImage = canvas.snapshot(snapshotParameters, null);
         }
 
         if (event.getEventType() == MouseEvent.MOUSE_DRAGGED && mousePressed)
         {
-            gc.drawImage(startWritableImage, 0, 0);
+            gc.drawImage(startWritableImage,0,0);
             MouseEvent mouseEvent = (MouseEvent) event;
             double width = Math.abs(startX - mouseEvent.getX());
             double height = Math.abs(startY - mouseEvent.getY());

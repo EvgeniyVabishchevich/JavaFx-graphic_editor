@@ -18,7 +18,7 @@ public class EditorMenu extends MenuBar {
         Menu fileMenu = new Menu("File");
         MenuItem newMenuItem = new MenuItem("New");
         MenuItem openMenuItem = new MenuItem("Open");
-        MenuItem saveMenuItem = new MenuItem("Save");
+        MenuItem saveMenuItem = new MenuItem("Save");//TODO
         MenuItem exitMenuItem = new MenuItem("Exit");
 
         /**
@@ -126,9 +126,9 @@ public class EditorMenu extends MenuBar {
         ok.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                canvas.clear(Color.WHITE);
                 canvas.setHeight(Double.parseDouble(height.getText()));
                 canvas.setWidth(Double.parseDouble(width.getText()));
+                canvas.clear(Color.WHITE);
                 newFileStage.close();
             }
         });

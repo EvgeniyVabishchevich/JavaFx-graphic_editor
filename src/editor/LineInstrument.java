@@ -34,6 +34,7 @@ public class LineInstrument implements  Instrument {
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setStroke(canvas.getInstrumentPanel().getCurrentMainColor());
+        gc.setLineWidth(canvas.getInstrumentPanel().getCurrentThickness());
 
         if (event.getEventType() == MouseEvent.MOUSE_PRESSED)
         {
