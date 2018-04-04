@@ -34,4 +34,14 @@ public class ScaleInstrument implements Instrument {
             }
         }
     }
+
+    @Override
+    public void attached(EditorCanvas canvas) {
+
+    }
+
+    @Override
+    public void detached(EditorCanvas canvas) {
+
+    }
 }

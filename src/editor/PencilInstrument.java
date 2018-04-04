@@ -7,6 +7,7 @@ import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Transform;
 
 public class PencilInstrument implements Instrument {
 
@@ -42,10 +43,11 @@ public class PencilInstrument implements Instrument {
 
             if (event.getEventType() == MouseEvent.MOUSE_PRESSED)
             {
-                startWritableImage = canvas.snapshot(new SnapshotParameters(), null);
+                SnapshotParameters snapshotParameters = new SnapshotParameters();
+                snapshotParameters.setTransform(Transform.scale(1/canvas.getScaleX(), 1/canvas.getScaleY()));
+                startWritableImage = canvas.snapshot(snapshotParameters, null);
                 mousePressed = true;
                 MouseEvent mouseEvent = (MouseEvent) event;
-                startY = mouseEvent.getY();
 
                 previousGetX = mouseEvent.getX();
                 previousGetY = mouseEvent.getY();
@@ -72,6 +74,16 @@ public class PencilInstrument implements Instrument {
                 KeyEvent keyEvent = (KeyEvent) event;
                 shiftDown = (keyEvent.isShiftDown());
             }
+    }
+
+    @Override
+    public void attached(EditorCanvas canvas) {
+
+    }
+
+    @Override
+    public void detached(EditorCanvas canvas) {
+
     }
 
     public void setFill(EditorCanvas canvas)

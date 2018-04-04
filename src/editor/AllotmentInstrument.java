@@ -150,6 +150,16 @@ public class AllotmentInstrument implements Instrument {
 
     }
 
+    @Override
+    public void attached(EditorCanvas canvas) {
+
+    }
+
+    @Override
+    public void detached(EditorCanvas canvas) {
+
+    }
+
     public boolean inAllotment(double x, double y)
     {
         return ( x > x1 && x < x1 + allotmentWidth && y > y1 && y < y1 + allotmentHeight) ? true : false;

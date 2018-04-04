@@ -30,9 +30,21 @@ public class FillInstrument implements Instrument {
         if (event.getEventType() == MouseEvent.MOUSE_PRESSED)
         {
             MouseEvent mouseEvent = (MouseEvent) event;
-            canvas.addSnapshot(canvas.snapshot(new SnapshotParameters(), null));
+            SnapshotParameters snapshotParameters = new SnapshotParameters();
+            snapshotParameters.setTransform(Transform.scale(1/canvas.getScaleX(), 1/canvas.getScaleY()));
+            canvas.addSnapshot(canvas.snapshot(snapshotParameters, null));
             paint(new Pixel((int) mouseEvent.getX(), (int) mouseEvent.getY()), canvas);
         }
+    }
+
+    @Override
+    public void attached(EditorCanvas canvas) {
+
+    }
+
+    @Override
+    public void detached(EditorCanvas canvas) {
+
     }
 
     /**

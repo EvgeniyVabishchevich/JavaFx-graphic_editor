@@ -39,6 +39,8 @@ public class InstrumentsPanel extends GridPane
 
     private double currentThickness;
 
+    private EditorCanvas canvas;
+
     public InstrumentsPanel()
     {
         instruments = new ArrayList<>();
@@ -50,6 +52,7 @@ public class InstrumentsPanel extends GridPane
         instruments.add(new RubberInstrument());
         instruments.add(new AllotmentInstrument());
         instruments.add(new ScaleInstrument());
+        instruments.add(new RandomAllotmentInstrument());
 
         currentInstrumentIndex = 0;
 
@@ -69,8 +72,6 @@ public class InstrumentsPanel extends GridPane
         ChoiceBox choiceBox = new ChoiceBox(FXCollections.observableArrayList("1", "2", "3", "4", "5"));
         ColorPicker colorPicker = new ColorPicker(Color.BLACK);
         currentMainColor = colorPicker.getValue();
-
-
 
         this.add(colorPicker, 0, arrayOfInstrumentsButtons.length/2 + 1, 2, 1);
         this.add(choiceBox, 0, arrayOfInstrumentsButtons.length/2 + 2, 2, 1);
@@ -99,13 +100,17 @@ public class InstrumentsPanel extends GridPane
         arrayOfInstrumentsButtons[4].setStyle("-fx-graphic: url(circle.png); -fx-padding: 1px ");
         arrayOfInstrumentsButtons[5].setStyle("-fx-graphic: url(rubber.png); -fx-padding: 1px ");
 
-
         for(int i = 0; i < arrayOfInstrumentsButtons.length; i++) {
             final int index = i;
             arrayOfInstrumentsButtons[i].setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    currentInstrumentIndex = index;
+                    if(index != currentInstrumentIndex)
+                    {
+                        instruments.get(currentInstrumentIndex).detached(canvas);
+                        currentInstrumentIndex = index;
+                        instruments.get(index).attached(canvas);
+                    }
                     EditorLog.log(getCurrentInstrument().getClass().getName());
                 }
             });
@@ -133,6 +138,11 @@ public class InstrumentsPanel extends GridPane
     {
         return currentThickness;
 
+    }
+
+    public void setCanvas(EditorCanvas canvas)
+    {
+        this.canvas = canvas;
     }
 
 }

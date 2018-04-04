@@ -18,6 +18,7 @@ public class GraphicsEditor extends Application {
 
         InstrumentsPanel instruments = new InstrumentsPanel();
         EditorCanvas canvas = new EditorCanvas(1000, 1000, instruments);
+        instruments.setCanvas(canvas);
         EditorMenu menu = new EditorMenu(canvas, primaryStage);
 
         Group group = new Group(canvas);

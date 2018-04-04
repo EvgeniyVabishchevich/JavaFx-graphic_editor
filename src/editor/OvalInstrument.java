@@ -79,4 +79,14 @@ public class OvalInstrument implements Instrument {
             shiftDown = (keyEvent.isShiftDown());
         }
     }
+
+    @Override
+    public void attached(EditorCanvas canvas) {
+
+    }
+
+    @Override
+    public void detached(EditorCanvas canvas) {
+
+    }
 }

@@ -87,4 +87,14 @@ public class RectInstrument implements Instrument {
             shiftDown = (keyEvent.isShiftDown());
         }
     }
+
+    @Override
+    public void detached(EditorCanvas canvas) {
+
+    }
+
+    @Override
+    public void attached(EditorCanvas canvas) {
+
+    }
 }

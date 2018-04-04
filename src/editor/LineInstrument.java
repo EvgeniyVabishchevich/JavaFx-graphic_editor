@@ -37,36 +37,42 @@ public class LineInstrument implements  Instrument {
         gc.setStroke(canvas.getInstrumentPanel().getCurrentMainColor());
         gc.setLineWidth(canvas.getInstrumentPanel().getCurrentThickness());
 
-        if (event.getEventType() == MouseEvent.MOUSE_PRESSED)
-        {
+        if (event.getEventType() == MouseEvent.MOUSE_PRESSED) {
             mousePressed = true;
             MouseEvent mouseEvent = (MouseEvent) event;
             startX = mouseEvent.getX();
             startY = mouseEvent.getY();
             SnapshotParameters snapshotParameters = new SnapshotParameters();
-            snapshotParameters.setTransform(Transform.scale(1/canvas.getScaleX(), 1/canvas.getScaleY()));
+            snapshotParameters.setTransform(Transform.scale(1 / canvas.getScaleX(), 1 / canvas.getScaleY()));
             startWritableImage = canvas.snapshot(snapshotParameters, null);
         }
 
-        if (event.getEventType() == MouseEvent.MOUSE_DRAGGED && mousePressed)
-        {
-           gc.drawImage(startWritableImage, 0, 0);
+        if (event.getEventType() == MouseEvent.MOUSE_DRAGGED && mousePressed) {
+            gc.drawImage(startWritableImage, 0, 0);
             MouseEvent mouseEvent = (MouseEvent) event;
-            if(shiftDown)
-            gc.strokeLine(startX, startY, mouseEvent.getX(), startY);
+            if (shiftDown)
+                gc.strokeLine(startX, startY, mouseEvent.getX(), startY);
             else gc.strokeLine(startX, startY, mouseEvent.getX(), mouseEvent.getY());
         }
 
-        if (event.getEventType() == MouseEvent.MOUSE_RELEASED)
-        {
+        if (event.getEventType() == MouseEvent.MOUSE_RELEASED) {
             canvas.addSnapshot(startWritableImage);
             mousePressed = false;
         }
 
-        if (event.getEventType() == KeyEvent.KEY_PRESSED || event.getEventType() == KeyEvent.KEY_RELEASED)
-        {
+        if (event.getEventType() == KeyEvent.KEY_PRESSED || event.getEventType() == KeyEvent.KEY_RELEASED) {
             KeyEvent keyEvent = (KeyEvent) event;
             shiftDown = (keyEvent.isShiftDown());
         }
+    }
+
+    @Override
+    public void attached(EditorCanvas canvas) {
+
+    }
+
+    @Override
+    public void detached(EditorCanvas canvas) {
+
     }
 }
